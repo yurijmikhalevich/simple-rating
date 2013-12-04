@@ -1,0 +1,29 @@
+<div data-ng-controller="Events" class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">{{name}}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="panel panel-default"
+                     data-ng-repeat="event in events | orderBy:'date':true">
+                    <div class="panel-heading">
+                        <span class="badge pull-right">{{event.date}}</span>
+                        {{event.title}}
+                    </div>
+                    <div class="panel-body">
+                        <p>{{event.description}}</p>
+                    </div>
+                    <div class="list-group marks">
+                        <span class="list-group-item mark"
+                            data-ng-repeat="mark in event.marks">
+                            <span class="badge">+{{mark.mark}}</span>
+                            <span class="comment">{{mark.comment}}</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

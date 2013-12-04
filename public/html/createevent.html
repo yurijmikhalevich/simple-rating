@@ -1,0 +1,15 @@
+<div data-ng-controller="Events" class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <input type="text" class="modal-title" id="myModalLabel" data-ng-model="title"/>
+            </div>
+            <textarea class="modal-body" data-ng-model="description"></textarea>
+            <div class="modal-footer">
+                <input type="date" data-ng-model="date"/>
+                <button data-ng-click="add()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

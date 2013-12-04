@@ -1,0 +1,16 @@
+<div data-ng-controller="Students" id="studentsList">
+    <div class="list-group">
+        <a href class="list-group-item"
+           data-ng-repeat="student in students | orderBy:'rating':true"
+           data-ng-click="show(student._id)">
+            <span class="badge">{{student.rating}}</span>
+            <span class="cropped">{{student.name}}</span>
+        </a>
+        <form data-ng-if="authorized">
+            <a class="list-group-item">
+                <input type="text" data-ng-model="$parent.newStudentName"/>
+                <button type="submit" data-ng-click="add()">Add</button>
+            </a>
+        </form>
+    </div>
+</div>

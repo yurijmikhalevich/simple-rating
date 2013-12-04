@@ -1,0 +1,97 @@
+html * {
+    font-family: Cambria, Georgia, serif !important;
+}
+.badge {
+    font-family: "Courier Bold", monospace !important;
+}
+header {
+    text-align: center;
+    max-width: 320px;
+    margin: 0 auto;
+}
+header hgroup {
+    margin-top: 40px;
+}
+header hgroup h1 {
+    font-size: 25px;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+header hgroup h2 {
+    font-size: 15px;
+    padding-top: 2px;
+    margin-top: 0;
+}
+header hgroup *, header hgroup *:hover {
+    color: #AAAAAA;
+    text-decoration: none;
+}
+.container {
+    margin-top: 30px;
+}
+#logo {
+    width: 90%;
+}
+#links {
+    margin-top: 30px;
+}
+#logos {
+    margin-top: 45px;
+}
+#logos img {
+    height: 50px;
+    margin: 7px;
+    opacity: 0.25;
+}
+.listBlock {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.listBlock h3 {
+    font-size: 25px;
+    font-weight: bold;
+    padding-bottom: 15px;
+}
+.listBlock a {
+    font-size: 18px;
+}
+#authorizationBlock {
+    margin: 45px;
+    opacity: 0.25;
+}
+#authorizationBlock input {
+    text-align: center;
+    border: none;
+}
+#authorizationBlock input:hover {
+    cursor: default;
+}
+div.mark {
+    text-align: left;
+}
+div.mark .mark {
+}
+div.mark .students {
+}
+div.mark .students .student.badge {
+    font-family: Cambria, Georgia, serif !important;
+    font-weight: normal;
+    background-color: #47A3E8;
+    margin: 0 2px;
+}
+div.mark .comment {
+    display: block;
+    margin-left: 2px;
+    word-wrap: break-word;
+}
+.cropped {
+    display: block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+div.marks .mark .comment {
+    display: block;
+    margin-right: 40px;
+    word-wrap: break-word;
+}

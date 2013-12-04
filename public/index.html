@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html data-ng-app="main">
+<head>
+    <title>KITTENS are on the WAY students rating</title>
+    <meta charset="utf-8"/>
+    <meta name="author" content="0@39.yt (Yurij Mikhalevich)"/>
+    <link rel="stylesheet" href="/public/libs/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/public/libs/bootstrap/dist/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="/public/css/main.css"/>
+    <script src="/public/libs/jquery/jquery.min.js"></script>
+    <script src="/public/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/public/libs/angular/angular.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/public/js/socket.js"></script>
+    <script src="/public/js/app.js"></script>
+    <script src="/public/js/controllers/authorization.js"></script>
+    <script src="/public/js/controllers/students.js"></script>
+    <script src="/public/js/controllers/events.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <header>
+                <a href="/"><img id="logo" src="/public/images/kittens.png"/></a>
+                <hgroup>
+                    <h1><a href="/"><strong>KITTENS</strong> are on the <strong>WAY</strong></a></h1>
+                    <h2><strong>Cat, LLC</strong> & <strong>Inway.com</strong>
+                        educational project</h2>
+                </hgroup>
+                <div id="links">
+                    <a href="https://github.com/kittens-are-on-the-way">
+                        https://github.com/kittens-are-on-the-way
+                    </a>
+                    <a href="mailto:kittensareontheway@gmail.com">
+                        kittensareontheway@gmail.com
+                    </a>
+                </div>
+                <div id="authorizationBlock" data-ng-controller="Authorization">
+                    <form data-ng-submit="authorize()">
+                        <input type="password" data-ng-model="secret"
+                               placeholder="tell me a secret"
+                               required="true"/>
+                    </form>
+                </div>
+                <div id="logos">
+                    <img id="cat-logo" src="/public/images/cat.png"/>
+                    <img id="inway-logo" src="/public/images/inway.png"/>
+                </div>
+            </header>
+        </div>
+        <div class="col-md-4">
+            <div id="studentsBlock" class="listBlock">
+                <h3>Students rating</h3>
+                <div id="students" data-ng-include="'/public/html/studentslist.html'"></div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div id="eventsBlock" class="listBlock">
+                <h3>Events</h3>
+                <div id="events" data-ng-include="'/public/html/eventslist.html'"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

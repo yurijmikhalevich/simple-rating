@@ -1,0 +1,39 @@
+<div data-ng-controller="Events" class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">{{title}}</h4>
+            </div>
+            <div class="modal-body">
+                {{description}}
+            </div>
+            <div class="modal-footer">
+                <div class="mark well well-sm" data-ng-repeat="mark in marks">
+                    <span class="mark badge pull-right">+{{mark.mark}}</span>
+                    <span class="students">
+                        <span class="student badge" data-ng-repeat="student in mark.students">
+                            {{student.name}}
+                        </span>
+                    </span>
+                    <span class="comment">{{mark.comment}}</span>
+                </div>
+                <form data-ng-if="authorized">
+                    <textarea data-ng-model="$parent.newMark.comment"></textarea>
+                    <input type="number" data-ng-model="$parent.newMark.mark"/>
+                    <div id="students">
+                        <span data-ng-repeat="student in students">
+                            <label class="checkbox" for="{{student._id}}">
+                                <input type="checkbox" value="{{student._id}}"
+                                        id="{{student._id}}"
+                                        data-ng-click="updateStudentIds(student._id)"/>
+                                {{student.name}}
+                            </label>
+                        </span>
+                    </div>
+                    <button data-ng-click="addMark()">Add mark</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

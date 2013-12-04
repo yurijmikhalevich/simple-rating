@@ -1,0 +1,11 @@
+{
+  "name": "kittens-are-on-the-way.org",
+  "version": "1.0.0",
+  "author": "0@39.yt (Yurij Mikhalevich)",
+  "license": "GPLv3",
+  "dependencies": {
+    "jquery": "~2.0.3",
+    "bootstrap": "~3.0.2",
+    "angular": "~1.2.3"
+  }
+}
