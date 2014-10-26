@@ -9,6 +9,17 @@ mainApp.controller('Events', function($rootScope, $scope, $compile) {
     $rootScope.events = events;
     $rootScope.$apply();
   });
+  $scope.add = function() {
+    var newEvent = {
+      title: $scope.newEventTitle,
+      description: $scope.newEventDescription,
+      date: $scope.newEventDate
+    };
+    socket.emit('add event', newEvent, function(event) {
+      $rootScope.events.push(event);
+      $rootScope.$apply();
+    });
+  };
   $scope.show = function(eventId) {
     $.get('/public/html/eventmodal.html', function(template) {
       var event;
@@ -63,8 +74,8 @@ mainApp.controller('Events', function($rootScope, $scope, $compile) {
       if (date.length === 1) {
         date = '0' + date;
       }
-      myScope.date = today.getFullYear().toString() + '-' + month + '-' + date;
-      //myScope.date = new Date(myScope.date);
+      myScope.date = today.getFullYear() + '-' + month + '-' + date;
+      console.log(myScope.date);
       template = $compile(template)(myScope);
       $('body').append(template);
       var myModal = $('#myModal');

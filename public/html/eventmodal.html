@@ -10,7 +10,7 @@
             </div>
             <div class="modal-footer">
                 <div class="mark well well-sm" data-ng-repeat="mark in marks">
-                    <span class="mark badge pull-right">+{{mark.mark}}</span>
+                    <span class="mark badge pull-right"><span data-ng-if="mark.mark >= 0">+</span>{{mark.mark}}</span>
                     <span class="students">
                         <span class="student badge" data-ng-repeat="student in mark.students">
                             {{student.name}}
@@ -25,8 +25,8 @@
                         <span data-ng-repeat="student in students">
                             <label class="checkbox" for="{{student._id}}">
                                 <input type="checkbox" value="{{student._id}}"
-                                        id="{{student._id}}"
-                                        data-ng-click="updateStudentIds(student._id)"/>
+                                       id="{{student._id}}"
+                                       data-ng-click="updateStudentIds(student._id)"/>
                                 {{student.name}}
                             </label>
                         </span>

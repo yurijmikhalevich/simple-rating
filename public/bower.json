@@ -10,6 +10,6 @@
   "dependencies": {
     "jquery": "2.1.x",
     "bootstrap": "3.2.x",
-    "angularjs": "1.3.x"
+    "angularjs": "1.2.x"
   }
 }
