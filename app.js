@@ -2,16 +2,16 @@
  * @license GPLv3
  * @author 0@39.yt (Yurij Mikhalevich)
  */
-
-
-var app = require('http').createServer(httpRequestHandler);
-var io = require('socket.io');
+var io = require('39f-socket.io');
 var db = require('mongodb');
 var async = require('async');
 var bcrypt = require('bcrypt');
+var jf = require('jsonfile');
+var path = require('path');
+var settings = jf.readFileSync(path.join(__dirname, 'settings.json'));
 var dbConn;
 
-db.MongoClient.connect('mongodb://localhost:27017/simple-rating',
+db.MongoClient.connect(settings.mongodb,
     function(err, conn) {
       if (err) {
         throw err;
@@ -24,96 +24,85 @@ db.MongoClient.connect('mongodb://localhost:27017/simple-rating',
 /**
  * Initialized socket.io
  */
-app.io = io.listen(app);
-app.io.sockets.on('connection', function(socket) {
-  socket.on('authorize', function(secret, callback) {
-    bcrypt.compare(secret,
-        '$2a$13$ZCw7J00OPubybCIa/aL5su1x23UHNsSKVyb57ArjgEI6jtCAig81G',
-        function(err, ok) {
-          if (err) {
-            socket.emit('err', err.toString());
-          } else {
-            if (ok) {
-              socket.on('add student', function(name, callback) {
-                var student = {
-                  name: name,
-                  rating: 0
-                };
-                dbConn.collection('students').insert(student,
-                    sendResponse(socket, callback, true));
-              });
-              socket.on('add event', function(event, callback) {
-                event.marks = [];
-                dbConn.collection('events').insert(event,
-                    sendResponse(socket, callback, true));
-              });
-              socket.on('add mark', function(data, callback) {
-                for (var i = 0; i < data.studentIds.length; ++i) {
-                  data.studentIds[i] = new db.ObjectID(data.studentIds[i]);
-                }
-                async.series([
-                  function(callback) {
-                    dbConn.collection('students').update(
-                        {_id: {$in: data.studentIds}},
-                        {$inc: {rating: data.mark}}, {multi: true}, callback);
-                  }, function(callback) {
-                    var markObject = {
-                      mark: data.mark,
-                      studentIds: data.studentIds,
-                      comment: data.comment
-                    };
-                    dbConn.collection('events').update(
-                        {_id: new db.ObjectID(data.eventId)},
-                        {$push: {marks: markObject}}, callback);
-                  }
-                ], sendResponse(socket, callback));
-              });
-              if (typeof callback === 'function') {
-                callback(ok);
-              }
-            }
-          }
+var app = new io();
+app.sockets.route('authorize', function(req) {
+  bcrypt.compare(req.data, settings.password,
+      function(err, ok) {
+        if (err) {
+          req.emit('err', err.toString());
+          return;
+        }
+        if (!ok) {
+          return;
+        }
+        req.socket.route('add student', function(req) {
+          var student = {
+            name: req.data,
+            rating: 0
+          };
+          dbConn.collection('students').insert(student,
+              sendResponse(req, true));
         });
-  });
-  socket.on('get students', function(data, callback) {
-    dbConn.collection('students').find().toArray(
-        sendResponse(socket, callback));
-  });
-  socket.on('get event', function(eventId, callback) {
-    dbConn.collection('events').findOne({_id: new db.ObjectID(eventId)},
-        sendResponse(socket, callback));
-  });
-  socket.on('get events', function(data, callback) {
-    dbConn.collection('events').find().toArray(sendResponse(socket, callback));
-  });
-  socket.on('get student events', function(studentId, callback) {
-    dbConn.collection('events').find({'marks.studentIds': studentId}).toArray(
-        sendResponse(socket, callback));
-  });
+        req.socket.route('add event', function(req) {
+          var event = req.data;
+          event.marks = [];
+          dbConn.collection('events').insert(event,
+              sendResponse(req, true));
+        });
+        req.socket.route('add mark', function(req) {
+          var data = req.data;
+          for (var i = 0; i < data.studentIds.length; ++i) {
+            data.studentIds[i] = new db.ObjectID(data.studentIds[i]);
+          }
+          async.series([
+            function(callback) {
+              dbConn.collection('students').update(
+                  {_id: {$in: data.studentIds}},
+                  {$inc: {rating: data.mark}}, {multi: true}, callback);
+            }, function(callback) {
+              var markObject = {
+                mark: data.mark,
+                studentIds: data.studentIds,
+                comment: data.comment
+              };
+              dbConn.collection('events').update(
+                  {_id: new db.ObjectID(data.eventId)},
+                  {$push: {marks: markObject}}, callback);
+            }
+          ], sendResponse(req));
+        });
+        req.respond(ok);
+      });
 });
-app.listen(8080);
+app.sockets.route('get students', function(req) {
+  dbConn.collection('students').find().toArray(sendResponse(req));
+});
+app.sockets.route('get event', function(req) {
+  dbConn.collection('events').findOne({_id: new db.ObjectID(req.data)},
+      sendResponse(req));
+});
+app.sockets.route('get events', function(req) {
+  dbConn.collection('events').find().toArray(sendResponse(req));
+});
+app.sockets.route('get student events', function(req) {
+  dbConn.collection('events').find({'marks.studentIds': req.data}).toArray(
+      sendResponse(req));
+});
 
-
-function httpRequestHandler(req, res) {
-  res.writeHead(403);
-  res.end();
-}
+app.listen(settings.port);
 
 
 /**
- * @param {Object} socket
- * @param {Function} callback
+ * @param {Object} req
  * @param {*=} opt_responseWithFirst
  * @return {function(Error, *)}
  */
-function sendResponse(socket, callback, opt_responseWithFirst) {
+function sendResponse(req, opt_responseWithFirst) {
   return function(err, data) {
     if (err) {
-      socket.emit('err', err.toString());
+      req.emit('err', err.toString());
     } else {
-      if (typeof callback === 'function') {
-        callback(opt_responseWithFirst ? data[0] : data);
-      }
+      req.respond(opt_responseWithFirst ? data[0] : data);
     }
   }
 }

@@ -1,0 +1,6 @@
+{
+  "port": 8080,
+  "title": "Simple Rating",
+  "password": "$2a$08$9Z2y1o2C/zu8wa.XFCcM8.VszFrPMp/KkDDiBbqUkZW9cBgzfN32W",
+  "mongodb": "mongodb://localhost:27017/simple-rating"
+}
