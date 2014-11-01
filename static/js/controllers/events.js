@@ -21,7 +21,7 @@ mainApp.controller('Events', function($rootScope, $scope, $compile) {
     });
   };
   $scope.show = function(eventId) {
-    $.get('/public/html/eventmodal.html', function(template) {
+    $.get('/static/html/eventmodal.html', function(template) {
       var event;
       for (var i = 0; i < $rootScope.events.length; ++i) {
         if ($rootScope.events[i]._id === eventId) {
@@ -61,7 +61,7 @@ mainApp.controller('Events', function($rootScope, $scope, $compile) {
     });
   };
   $scope.create = function() {
-    $.get('/public/html/createevent.html', function(template) {
+    $.get('/static/html/createevent.html', function(template) {
       var myScope = $rootScope.$new();
       myScope.title = 'New event';
       myScope.description = 'New event description';

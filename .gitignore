@@ -1,6 +1,6 @@
 .idea
 node_modules
-public/libs
+static/libs
 npm-debug.log
 
 lib-cov

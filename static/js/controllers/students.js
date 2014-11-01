@@ -18,7 +18,7 @@ mainApp.controller('Students', function($rootScope, $scope, $compile) {
     });
   };
   $scope.show = function(studentId) {
-    $.get('/public/html/studentmodal.html', function(template) {
+    $.get('/static/html/studentmodal.html', function(template) {
       var student;
       for (var i = 0; i < $rootScope.students.length; ++i) {
         if ($rootScope.students[i]._id === studentId) {
