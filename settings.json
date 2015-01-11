@@ -1,6 +1,9 @@
 {
   "port": 8080,
-  "title": "Simple Rating",
-  "password": "$2a$08$9Z2y1o2C/zu8wa.XFCcM8.VszFrPMp/KkDDiBbqUkZW9cBgzfN32W",
-  "mongodb": "mongodb://localhost:27017/simple-rating"
+  "password": "$2a$08$b4zxaxALJAZI65IUO883aOpYkpZZK/6U5HfIkUW/cxdUnNfyF5OgW",
+  "mongodb": {
+    "connString": "localhost:27017/simple-rating",
+    "poolSize": 5,
+    "useSsl": false
+  }
 }

@@ -3,7 +3,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">{{title}}</h4>
+                <span class="badge modal-header-badge">{{date}}</span>
+                <h4 class="modal-title cropped" id="myModalLabel">{{title}}</h4>
             </div>
             <div class="modal-body">
                 {{description}}
@@ -11,27 +12,33 @@
             <div class="modal-footer">
                 <div class="mark well well-sm" data-ng-repeat="mark in marks">
                     <span class="mark badge pull-right"><span data-ng-if="mark.mark >= 0">+</span>{{mark.mark}}</span>
-                    <span class="students">
-                        <span class="student badge" data-ng-repeat="student in mark.students">
-                            {{student.name}}
+                    <span class="participants">
+                        <span class="participant badge" data-ng-repeat="participant in mark.participants">
+                            {{participant.name}}
                         </span>
                     </span>
                     <span class="comment">{{mark.comment}}</span>
                 </div>
-                <form data-ng-if="authorized">
-                    <textarea data-ng-model="$parent.newMark.comment"></textarea>
-                    <input type="number" data-ng-model="$parent.newMark.mark"/>
-                    <div id="students">
-                        <span data-ng-repeat="student in students">
-                            <label class="checkbox" for="{{student._id}}">
-                                <input type="checkbox" value="{{student._id}}"
-                                       id="{{student._id}}"
-                                       data-ng-click="updateStudentIds(student._id)"/>
-                                {{student.name}}
-                            </label>
-                        </span>
+                <form data-ng-if="authorized" data-ng-submit="addMark()">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="new-mark-addon">New mark</span>
+                        <input type="number" class="form-control" required
+                               data-ng-model="$parent.newMark.mark" data-area-describedby="new-mark-addon"/>
                     </div>
-                    <button data-ng-click="addMark()">Add mark</button>
+                    <textarea placeholder="Comment for new mark&hellip;"
+                              required class="form-control"
+                              data-ng-model="$parent.newMark.comment"></textarea>
+                    <div id="participants">
+                        <div data-ng-repeat="participant in participants | orderBy:'rating':true" class="checkbox">
+                            <label for="{{participant._id}}">
+                                <input type="checkbox" value="{{participant._id}}"
+                                       id="{{participant._id}}"
+                                       data-ng-click="updateParticipantIds(participant._id)"/>
+                                {{participant.name}}
+                            </label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-default">Add mark</button>
                 </form>
             </div>
         </div>

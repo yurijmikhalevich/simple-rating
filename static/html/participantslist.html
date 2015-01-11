@@ -1,0 +1,22 @@
+<div data-ng-controller="Participants" id="participantsList">
+    <div class="list-group">
+        <a href class="list-group-item"
+           data-ng-repeat="participant in participants | orderBy:'rating':true"
+           data-ng-click="show(participant._id)">
+            <span class="badge">{{participant.rating}}</span>
+            <span class="cropped">{{participant.name}}</span>
+        </a>
+        <div id="participant-input" class="list-group-item" data-ng-if="authorized">
+            <form data-ng-submit="add()">
+                <div class="input-group">
+                    <input type="text" class="form-control input-lg" required
+                           placeholder="New participant name&hellip;"
+                           data-ng-model="$parent.newParticipantName"/>
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn-default btn-lg input-lg">Add</button>
+                    </span>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

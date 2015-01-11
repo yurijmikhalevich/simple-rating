@@ -2,94 +2,81 @@
  * @license GPLv3
  * @author 0@39.yt (Yurij Mikhalevich)
  */
-var io = require('39f-socket.io');
-var db = require('mongodb');
+var f = require('39f-meta');
 var async = require('async');
 var bcrypt = require('bcrypt');
 var jf = require('jsonfile');
 var path = require('path');
 var settings = jf.readFileSync(path.join(__dirname, 'settings.json'));
-var dbConn;
+var db = f.database;
 
-db.MongoClient.connect(settings.mongodb,
-    function(err, conn) {
-      if (err) {
-        throw err;
-      } else {
-        dbConn = conn;
-      }
-    });
+f.database.init([{name: 'main', settings: settings.mongodb}]);
 
-
-/**
- * Initialized socket.io
- */
-var app = new io();
-app.sockets.route('authorize', function(req) {
-  bcrypt.compare(req.data, settings.password,
-      function(err, ok) {
-        if (err) {
-          req.emit('err', err.toString());
-          return;
-        }
-        if (!ok) {
-          return;
-        }
-        req.socket.route('add student', function(req) {
-          var student = {
-            name: req.data,
-            rating: 0
-          };
-          dbConn.collection('students').insert(student,
-              sendResponse(req, true));
-        });
-        req.socket.route('add event', function(req) {
-          var event = req.data;
-          event.marks = [];
-          dbConn.collection('events').insert(event,
-              sendResponse(req, true));
-        });
-        req.socket.route('add mark', function(req) {
-          var data = req.data;
-          for (var i = 0; i < data.studentIds.length; ++i) {
-            data.studentIds[i] = new db.ObjectID(data.studentIds[i]);
+f.loadApp(settings.port, '0.0.0.0', 1, function(err, app) {
+  app.io.sockets.route('authorize', function(req) {
+    bcrypt.compare(req.data, settings.password,
+        function(err, ok) {
+          if (err) {
+            req.emit('err', err.toString());
+            return;
           }
-          async.series([
-            function(callback) {
-              dbConn.collection('students').update(
-                  {_id: {$in: data.studentIds}},
-                  {$inc: {rating: data.mark}}, {multi: true}, callback);
-            }, function(callback) {
-              var markObject = {
-                mark: data.mark,
-                studentIds: data.studentIds,
-                comment: data.comment
-              };
-              dbConn.collection('events').update(
-                  {_id: new db.ObjectID(data.eventId)},
-                  {$push: {marks: markObject}}, callback);
+          if (!ok) {
+            return;
+          }
+          req.socket.route('add participant', function(req) {
+            var participant = {
+              name: req.data,
+              rating: 0
+            };
+            db.main.collection('participants').insertOne(participant,
+                sendResponse(req, true));
+          });
+          req.socket.route('add event', function(req) {
+            var event = req.data;
+            event.marks = [];
+            db.main.collection('events').insertOne(event,
+                sendResponse(req, true));
+          });
+          req.socket.route('add mark', function(req) {
+            var data = req.data;
+            for (var i = 0; i < data.participantIds.length; ++i) {
+              data.participantIds[i] = new db.ObjectID(data.participantIds[i]);
             }
-          ], sendResponse(req));
+            async.series([
+              function(callback) {
+                db.main.collection('participants').updateOne(
+                    {_id: {$in: data.participantIds}},
+                    {$inc: {rating: data.mark}}, {multi: true}, callback);
+              }, function(callback) {
+                var markObject = {
+                  mark: data.mark,
+                  participantIds: data.participantIds,
+                  comment: data.comment
+                };
+                db.main.collection('events').updateOne(
+                    {_id: new db.ObjectID(data.eventId)},
+                    {$push: {marks: markObject}}, callback);
+              }
+            ], sendResponse(req));
+          });
+          req.respond(ok);
         });
-        req.respond(ok);
-      });
+  });
+  app.io.sockets.route('get participants', function(req) {
+    db.main.collection('participants').find().toArray(sendResponse(req));
+  });
+  app.io.sockets.route('get event', function(req) {
+    db.main.collection('events').findOne({_id: new db.ObjectID(req.data)},
+        sendResponse(req));
+  });
+  app.io.sockets.route('get events', function(req) {
+    db.main.collection('events').find().toArray(sendResponse(req));
+  });
+  app.io.sockets.route('get participant events', function(req) {
+    db.main.collection('events').find({'marks.participantIds': req.data})
+        .toArray(sendResponse(req));
+  });
 });
-app.sockets.route('get students', function(req) {
-  dbConn.collection('students').find().toArray(sendResponse(req));
-});
-app.sockets.route('get event', function(req) {
-  dbConn.collection('events').findOne({_id: new db.ObjectID(req.data)},
-      sendResponse(req));
-});
-app.sockets.route('get events', function(req) {
-  dbConn.collection('events').find().toArray(sendResponse(req));
-});
-app.sockets.route('get student events', function(req) {
-  dbConn.collection('events').find({'marks.studentIds': req.data}).toArray(
-      sendResponse(req));
-});
-
-app.listen(settings.port);
 
 
 /**
@@ -102,6 +89,9 @@ function sendResponse(req, opt_responseWithFirst) {
     if (err) {
       req.emit('err', err.toString());
     } else {
+      if (data.ops) {
+        data = data.ops;
+      }
       req.respond(opt_responseWithFirst ? data[0] : data);
     }
   }

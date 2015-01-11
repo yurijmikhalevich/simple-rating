@@ -1,11 +1,36 @@
-# kittens-are-on-the-way.org
+# simple-rating
 
-Репозиторий исходного кода движка сайта (и серверной и клиентской частей) [kittens-are-on-the-way.org](http://kittens-are-on-the-way.org/).
+Here is simple rating application to create event-based rating list.
 
-Сервер разработан на node.js, в качестве СУБД используется [MongoDB](http://www.mongodb.org/). Используются следующие модули:
-* [mongodb](https://npmjs.org/package/mongodb) - для работы с СУБД;
-* [socket.io](https://npmjs.org/package/socket.io) - для организации клиент-серверного взаимодействия;
-* [async](https://npmjs.org/package/async) - для организации асинхронных операций;
-* [bcrypt](https://npmjs.org/package/bcrypt) - для работы с функцией хеширования, основанной на алгоритме шифрования Blowfish.
+## Installation and usage
 
-В основе клиентской части лежит фреймворк [AngularJS](http://angularjs.org/). Используются библиотеки [jQuery](http://jquery.com/) и [Bootstrap](http://getbootstrap.com/).
+To launch application you need nodejs, npm, mongodb server and
+some static server (I prefer using nginx, but it's completely free to select)
+installed. Setup your static
+files server to server /static/ dir of the project as /static/ and proxy other
+request to the application server (you should specify port in settings.json as
+well as other settings).
+Your proxy should support WebSockets.
+
+Next you should execute in the application directory.
+
+```bash
+$ npm install
+$ node app.js
+```
+
+That's all.
+
+Default password is "beacon", but you may change it by changing bcrypt hash in
+settings.json.
+
+## Generating new bcrypt hash
+
+You should execute this in the application directory after performing
+"npm install".
+
+```bash
+$ node
+> require('bcrypt').hashSync('your password here', 8)
+'$2a$08$yfKrF8yn8EmhpS69G/bR3e.E3PvGdAXzynXtL8k0P/LhO/qGyOa1m'
+```

@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html data-ng-app="main">
 <head>
-    <title>KITTENS are on the WAY students rating</title>
+    <title>Simple Rating</title>
     <meta charset="utf-8"/>
     <meta name="author" content="0@39.yt (Yurij Mikhalevich)"/>
+    <link rel="icon" href="/static/img/favicon.png" type="image/png"/>
     <link rel="stylesheet" href="/static/libs/bootstrap/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="/static/libs/bootstrap/dist/css/bootstrap-theme.min.css"/>
     <link rel="stylesheet" href="/static/css/main.css"/>
     <script src="/static/libs/jquery/dist/jquery.min.js"></script>
     <script src="/static/libs/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -14,7 +14,7 @@
     <script src="/static/js/socket.js"></script>
     <script src="/static/js/app.js"></script>
     <script src="/static/js/controllers/authorization.js"></script>
-    <script src="/static/js/controllers/students.js"></script>
+    <script src="/static/js/controllers/participants.js"></script>
     <script src="/static/js/controllers/events.js"></script>
 </head>
 <body>
@@ -22,37 +22,36 @@
     <div class="row">
         <div class="col-md-4">
             <header>
-                <a href="/"><img id="logo" src="/static/images/kittens.png"/></a>
-                <hgroup>
-                    <h1><a href="/"><strong>KITTENS</strong> are on the <strong>WAY</strong></a></h1>
-                    <h2><strong>Cat, LLC</strong> & <strong>Inway.com</strong>
-                        educational project</h2>
-                </hgroup>
-                <div id="links">
-                    <a href="https://github.com/kittens-are-on-the-way">
-                        https://github.com/kittens-are-on-the-way
+                <div id="logo-container">
+                    <a href="/">
+                        <div id="logo" class="circleBase">
+                            <hgroup>
+                                <h1>Simple Rating</h1>
+                            </hgroup>
+                        </div>
                     </a>
-                    <a href="mailto:kittensareontheway@gmail.com">
-                        kittensareontheway@gmail.com
+                </div>
+                <div id="links">
+                    <a href="https://github.com/39dotyt/simple-rating">
+                        https://github.com/39dotyt/simple-rating
+                    </a>
+                    <a href="mailto:test@test.ch">
+                        test@test.ch
                     </a>
                 </div>
                 <div id="authorizationBlock" data-ng-controller="Authorization">
                     <form data-ng-submit="authorize()">
                         <input type="password" data-ng-model="secret"
                                placeholder="tell me a secret"
-                               required="true"/>
+                               required/>
                     </form>
-                </div>
-                <div id="logos">
-                    <img id="cat-logo" src="/static/images/cat.png"/>
-                    <img id="inway-logo" src="/static/images/inway.png"/>
                 </div>
             </header>
         </div>
         <div class="col-md-4">
-            <div id="studentsBlock" class="listBlock">
-                <h3>Students rating</h3>
-                <div id="students" data-ng-include="'/static/html/studentslist.html'"></div>
+            <div id="participantsBlock" class="listBlock">
+                <h3>Participants</h3>
+                <div id="participants" data-ng-include="'/static/html/participantslist.html'"></div>
             </div>
         </div>
         <div class="col-md-4">

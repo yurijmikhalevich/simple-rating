@@ -1,6 +1,6 @@
 {
   "name": "simple-rating",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": {
     "name": "Yurij Mikhalevich",
     "email": "0@39.yt",
@@ -8,8 +8,7 @@
   },
   "license": "GPLv3",
   "dependencies": {
-    "mongodb": "1.4.x",
-    "39f-socket.io": "1.0.x",
+    "39f-meta": "0.12.x",
     "async": "0.9.x",
     "bcrypt": "0.8.x",
     "jsonfile": "2.0.x"

@@ -6,6 +6,6 @@
 var socket = io();
 
 socket.on('err', function(error) {
-  console.err(error);
+  console.error(error);
   alert(error.toString());
 });

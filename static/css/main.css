@@ -4,44 +4,51 @@ html * {
 .badge {
     font-family: "Courier Bold", monospace !important;
 }
+.listBlock .badge {
+    margin-top: 4px;
+}
 header {
     text-align: center;
     max-width: 320px;
     margin: 0 auto;
 }
 header hgroup {
-    margin-top: 40px;
+    position:  absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    text-align: center;
 }
 header hgroup h1 {
-    font-size: 25px;
+    padding-top: 35px;
+    font-size: 65px;
     padding-bottom: 0;
     margin-bottom: 0;
 }
-header hgroup h2 {
-    font-size: 15px;
-    padding-top: 2px;
-    margin-top: 0;
-}
 header hgroup *, header hgroup *:hover {
-    color: #AAAAAA;
+    color: white;
     text-decoration: none;
 }
 .container {
     margin-top: 30px;
 }
+.circleBase {
+    border-radius: 50%;
+}
 #logo {
+    position: relative;
     width: 90%;
+    margin-left: 5%;
+    background-image: linear-gradient(mediumseagreen, lightseagreen);
+}
+#logo:before {
+    content: "";
+    display: block;
+    padding-top: 100%;
 }
 #links {
     margin-top: 30px;
-}
-#logos {
-    margin-top: 45px;
-}
-#logos img {
-    height: 50px;
-    margin: 7px;
-    opacity: 0.25;
 }
 .listBlock {
     padding-left: 5px;
@@ -62,6 +69,7 @@ header hgroup *, header hgroup *:hover {
 #authorizationBlock input {
     text-align: center;
     border: none;
+    width: 100%;
 }
 #authorizationBlock input:hover {
     cursor: default;
@@ -69,15 +77,14 @@ header hgroup *, header hgroup *:hover {
 div.mark {
     text-align: left;
 }
-div.mark .mark {
-}
-div.mark .students {
-}
-div.mark .students .student.badge {
+div.mark .participants .participant.badge {
     font-family: Cambria, Georgia, serif !important;
     font-weight: normal;
     background-color: #47A3E8;
     margin: 0 2px;
+}
+div.mark .mark.badge {
+    margin-top: 2px;
 }
 div.mark .comment {
     display: block;
@@ -94,4 +101,24 @@ div.marks .mark .comment {
     display: block;
     margin-right: 40px;
     word-wrap: break-word;
+}
+#participant-input {
+    padding: 0;
+}
+#participant-input button {
+    border: none;
+    border-radius: 0;
+}
+#participant-input input {
+    border-top-left-radius: 0;
+    border-top: none;
+    border-left: none;
+    border-bottom: none;
+}
+.modal-header-badge {
+    float: right;
+    margin: 5px 15px 0 0;
+}
+#participants {
+    text-align: left;
 }

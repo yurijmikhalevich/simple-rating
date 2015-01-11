@@ -9,17 +9,6 @@ mainApp.controller('Events', function($rootScope, $scope, $compile) {
     $rootScope.events = events;
     $rootScope.$apply();
   });
-  $scope.add = function() {
-    var newEvent = {
-      title: $scope.newEventTitle,
-      description: $scope.newEventDescription,
-      date: $scope.newEventDate
-    };
-    socket.emit('add event', newEvent, function(event) {
-      $rootScope.events.push(event);
-      $rootScope.$apply();
-    });
-  };
   $scope.show = function(eventId) {
     $.get('/static/html/eventmodal.html', function(template) {
       var event;
@@ -38,12 +27,12 @@ mainApp.controller('Events', function($rootScope, $scope, $compile) {
         var myMark = {
           mark: mark.mark,
           comment: mark.comment,
-          students: []
+          participants: []
         };
-        mark.studentIds.forEach(function(studentId) {
-          for (var i = 0; i < $rootScope.students.length; ++i) {
-            if ($rootScope.students[i]._id === studentId) {
-              myMark.students.push($rootScope.students[i]);
+        mark.participantIds.forEach(function(participantId) {
+          for (var i = 0; i < $rootScope.participants.length; ++i) {
+            if ($rootScope.participants[i]._id === participantId) {
+              myMark.participants.push($rootScope.participants[i]);
               break;
             }
           }
@@ -63,10 +52,8 @@ mainApp.controller('Events', function($rootScope, $scope, $compile) {
   $scope.create = function() {
     $.get('/static/html/createevent.html', function(template) {
       var myScope = $rootScope.$new();
-      myScope.title = 'New event';
-      myScope.description = 'New event description';
       var today = new Date();
-      var month = today.getMonth().toString();
+      var month = (today.getMonth() + 1).toString();
       if (month.length === 1) {
         month = '0' + month;
       }
@@ -93,7 +80,7 @@ mainApp.controller('Events', function($rootScope, $scope, $compile) {
     };
     socket.emit('add event', event, function(addedEvent) {
       $rootScope.events.push(addedEvent);
-      $('#myModal').hide();
+      $('#myModal').modal('hide');
       $rootScope.$apply();
     });
   };
@@ -103,10 +90,10 @@ mainApp.controller('Events', function($rootScope, $scope, $compile) {
       for (var i = 0; i < $rootScope.events.length; ++i) {
         if ($rootScope.events[i]._id === $scope.eventId) {
           $rootScope.events[i].marks.push($scope.newMark);
-          $scope.newMark.studentIds.forEach(function(studentId) {
-            for (var i = 0; i < $rootScope.students.length; ++i) {
-              if ($rootScope.students[i]._id === studentId) {
-                $rootScope.students[i].rating += $scope.newMark.mark;
+          $scope.newMark.participantIds.forEach(function(participantId) {
+            for (var i = 0; i < $rootScope.participants.length; ++i) {
+              if ($rootScope.participants[i]._id === participantId) {
+                $rootScope.participants[i].rating += $scope.newMark.mark;
                 break;
               }
             }
@@ -118,18 +105,18 @@ mainApp.controller('Events', function($rootScope, $scope, $compile) {
       }
     });
   };
-  $scope.updateStudentIds = function(studentId) {
+  $scope.updateParticipantIds = function(participantId) {
     if (!$scope.newMark) {
       $scope.newMark = {};
     }
-    if (!$scope.newMark.studentIds) {
-      $scope.newMark.studentIds = [];
+    if (!$scope.newMark.participantIds) {
+      $scope.newMark.participantIds = [];
     }
-    var studentIdIndex = $scope.newMark.studentIds.indexOf(studentId);
-    if (studentIdIndex === -1) {
-      $scope.newMark.studentIds.push(studentId);
+    var participantIdIndex = $scope.newMark.participantIds.indexOf(participantId);
+    if (participantIdIndex === -1) {
+      $scope.newMark.participantIds.push(participantId);
     } else {
-      $scope.newMark.studentIds.splice(studentIdIndex, 1);
+      $scope.newMark.participantIds.splice(participantIdIndex, 1);
     }
   };
 });
