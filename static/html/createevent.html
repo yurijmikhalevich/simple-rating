@@ -1,20 +1,20 @@
-<div data-ng-controller="Events" class="modal fade" id="myModal" tabindex="-1"
+<div x-ng-controller="Events" class="modal fade" id="myModal" tabindex="-1"
      role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form data-ng-submit="add()">
+            <form x-ng-submit="add()">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <button type="button" class="close" x-dismiss="modal" aria-hidden="true">&times;</button>
                     <span class="form-inline">
                         <input type="text" class="form-control" placeholder="New event name&hellip;"
-                               id="myModalLabel" required data-ng-model="title"/>
-                        <input type="date" required="true" class="form-control" data-ng-model="date"/>
+                               id="myModalLabel" required x-ng-model="title"/>
+                        <input type="date" required="true" class="form-control" x-ng-model="date"/>
                     </span>
                 </div>
                 <div class="modal-body">
                     <textarea class="form-control" rows="4" required
                               placeholder="New event description&hellip;"
-                              data-ng-model="description"></textarea>
+                              x-ng-model="description"></textarea>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-default">Save</button>

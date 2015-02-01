@@ -1,17 +1,29 @@
-<div data-ng-controller="Participants" id="participantsList">
+<div x-ng-controller="Participants" id="participantsList">
     <div class="list-group">
-        <a href class="list-group-item"
-           data-ng-repeat="participant in participants | orderBy:'rating':true"
-           data-ng-click="show(participant._id)">
+        <a href="javascript:void(0);" class="list-group-item"
+           x-ng-repeat="participant in participants | orderBy:'rating':true"
+           x-ng-mouseenter="participant.showControls = true"
+           x-ng-mouseleave="participant.showControls = false"
+           x-ng-click="show(participant._id)">
             <span class="badge">{{participant.rating}}</span>
+            <span x-ng-if="authorized && participant.showControls" class="controls">
+                <span x-ng-click="edit(participant._id)" x-stop-event="click"
+                      class="glyphicon glyphicon-edit" aria-label="edit">
+                    <span class="sr-only">edit</span>
+                </span>
+                <span x-ng-click="remove(participant._id)" x-stop-event="click"
+                      class="glyphicon glyphicon-remove" aria-label="remove">
+                    <span class="sr-only">remove</span>
+                </span>
+            </span>
             <span class="cropped">{{participant.name}}</span>
         </a>
-        <div id="participant-input" class="list-group-item" data-ng-if="authorized">
-            <form data-ng-submit="add()">
+        <div id="participant-input" class="list-group-item" x-ng-if="authorized">
+            <form x-ng-submit="add()">
                 <div class="input-group">
                     <input type="text" class="form-control input-lg" required
                            placeholder="New participant name&hellip;"
-                           data-ng-model="$parent.newParticipantName"/>
+                           x-ng-model="$parent.newParticipantName"/>
                     <span class="input-group-btn">
                         <button type="submit" class="btn btn-default btn-lg input-lg">Add</button>
                     </span>

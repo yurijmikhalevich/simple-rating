@@ -52,17 +52,7 @@ mainApp.controller('Events', function($rootScope, $scope, $compile) {
   $scope.create = function() {
     $.get('/static/html/createevent.html', function(template) {
       var myScope = $rootScope.$new();
-      var today = new Date();
-      var month = (today.getMonth() + 1).toString();
-      if (month.length === 1) {
-        month = '0' + month;
-      }
-      var date = today.getUTCDate().toString();
-      if (date.length === 1) {
-        date = '0' + date;
-      }
-      myScope.date = today.getFullYear() + '-' + month + '-' + date;
-      console.log(myScope.date);
+      myScope.date = new Date();
       template = $compile(template)(myScope);
       $('body').append(template);
       var myModal = $('#myModal');
@@ -73,10 +63,19 @@ mainApp.controller('Events', function($rootScope, $scope, $compile) {
     });
   };
   $scope.add = function() {
+    var month = ($scope.date.getMonth() + 1).toString();
+    if (month.length === 1) {
+      month = '0' + month;
+    }
+    var date = $scope.date.getUTCDate().toString();
+    if (date.length === 1) {
+      date = '0' + date;
+    }
+    var fullDate = $scope.date.getFullYear() + '-' + month + '-' + date;
     var event = {
       title: $scope.title,
       description: $scope.description,
-      date: $scope.date
+      date: fullDate
     };
     socket.emit('add event', event, function(addedEvent) {
       $rootScope.events.push(addedEvent);

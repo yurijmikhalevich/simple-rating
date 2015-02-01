@@ -9,24 +9,44 @@ mainApp.controller('Participants', function($rootScope, $scope, $compile) {
     $rootScope.participants = participants;
     $rootScope.$apply();
   });
+  $rootScope.findParticipant = function(participantId) {
+    for (var i = 0; i < $rootScope.participants.length; ++i) {
+      if ($rootScope.participants[i]._id === participantId) {
+        return $rootScope.participants[i];
+      }
+    }
+  };
   $scope.add = function() {
-    console.log($scope.newParticipantName);
-    socket.emit('add participant', $scope.newParticipantName,
+    socket.emit('add participant', {name: $scope.newParticipantName},
         function(participant) {
           $rootScope.participants.push(participant);
           $scope.newParticipantName = null;
           $rootScope.$apply();
         });
   };
-  $scope.show = function(participantId) {
-    $.get('/static/html/participantmodal.html', function(template) {
-      var participant;
-      for (var i = 0; i < $rootScope.participants.length; ++i) {
-        if ($rootScope.participants[i]._id === participantId) {
-          participant = $rootScope.participants[i];
-          break;
+  $scope.edit = function(participantId) {
+    console.log('они мертвы внутри');
+  };
+  $scope.remove = function(participantId) {
+    var participant = $rootScope.findParticipant(participantId);
+    bootbox.confirm({
+      title: 'Are you sure?',
+      message: 'Are you sure you want to completely remove participant "' +
+          participant.name + '"?',
+      callback: function(confirmed) {
+        if (confirmed) {
+          socket.emit('remove participant', {_id: participantId}, function() {
+            $rootScope.participants.splice(
+                $rootScope.participants.indexOf(participant), 1);
+            $rootScope.$apply();
+          });
         }
       }
+    });
+  };
+  $scope.show = function(participantId) {
+    $.get('/static/html/participantmodal.html', function(template) {
+      var participant = $rootScope.findParticipant(participantId);
       var myScope = $rootScope.$new();
       myScope.participantId = participant._id;
       myScope.name = participant.name;

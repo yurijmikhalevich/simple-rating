@@ -1,8 +1,8 @@
-<div data-ng-controller="Events" class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div x-ng-controller="Events" class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <button type="button" class="close" x-dismiss="modal" aria-hidden="true">&times;</button>
                 <span class="badge modal-header-badge">{{date}}</span>
                 <h4 class="modal-title cropped" id="myModalLabel">{{title}}</h4>
             </div>
@@ -10,30 +10,30 @@
                 {{description}}
             </div>
             <div class="modal-footer">
-                <div class="mark well well-sm" data-ng-repeat="mark in marks">
-                    <span class="mark badge pull-right"><span data-ng-if="mark.mark >= 0">+</span>{{mark.mark}}</span>
+                <div class="mark well well-sm" x-ng-repeat="mark in marks">
+                    <span class="mark badge pull-right"><span x-ng-if="mark.mark >= 0">+</span>{{mark.mark}}</span>
                     <span class="participants">
-                        <span class="participant badge" data-ng-repeat="participant in mark.participants">
+                        <span class="participant badge" x-ng-repeat="participant in mark.participants">
                             {{participant.name}}
                         </span>
                     </span>
                     <span class="comment">{{mark.comment}}</span>
                 </div>
-                <form data-ng-if="authorized" data-ng-submit="addMark()">
+                <form x-ng-if="authorized" x-ng-submit="addMark()">
                     <div class="input-group">
                         <span class="input-group-addon" id="new-mark-addon">New mark</span>
                         <input type="number" class="form-control" required
-                               data-ng-model="$parent.newMark.mark" data-area-describedby="new-mark-addon"/>
+                               x-ng-model="$parent.newMark.mark" x-area-describedby="new-mark-addon"/>
                     </div>
                     <textarea placeholder="Comment for new mark&hellip;"
                               required class="form-control"
-                              data-ng-model="$parent.newMark.comment"></textarea>
+                              x-ng-model="$parent.newMark.comment"></textarea>
                     <div id="participants">
-                        <div data-ng-repeat="participant in participants | orderBy:'rating':true" class="checkbox">
+                        <div x-ng-repeat="participant in participants | orderBy:'rating':true" class="checkbox">
                             <label for="{{participant._id}}">
                                 <input type="checkbox" value="{{participant._id}}"
                                        id="{{participant._id}}"
-                                       data-ng-click="updateParticipantIds(participant._id)"/>
+                                       x-ng-click="updateParticipantIds(participant._id)"/>
                                 {{participant.name}}
                             </label>
                         </div>

@@ -1,5 +1,5 @@
 html * {
-    font-family: Cambria, Georgia, serif !important;
+    font-family: Cambria, Georgia, serif;
 }
 .badge {
     font-family: "Courier Bold", monospace !important;
@@ -121,4 +121,17 @@ div.marks .mark .comment {
 }
 #participants {
     text-align: left;
+}
+.controls {
+    float: right;
+    margin: 2px 3px;
+}
+.controls .glyphicon {
+    opacity: 0.3;
+}
+.controls .glyphicon:hover {
+    opacity: 1;
+}
+.list-group li:hover {
+    cursor: pointer;
 }

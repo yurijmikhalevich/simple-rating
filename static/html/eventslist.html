@@ -1,13 +1,12 @@
-<div data-ng-controller="Events">
+<div x-ng-controller="Events">
     <div class="list-group">
-        <a href class="list-group-item"
-            data-ng-repeat="event in events | orderBy:'date':true"
-            data-ng-click="show(event._id)">
+        <a href="javascript:void(0);" class="list-group-item"
+            x-ng-repeat="event in events | orderBy:'date':true"
+            x-ng-click="show(event._id)">
             <span class="badge">{{event.date}}</span>
             <span class="cropped">{{event.title}}</span>
         </a>
-        <a href class="list-group-item" data-ng-click="create()"
-           data-ng-if="authorized">
+        <a href class="list-group-item" x-ng-click="create()" x-ng-if="authorized">
             <strong>Create new event</strong>
         </a>
     </div>

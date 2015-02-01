@@ -2,6 +2,10 @@
 
 Here is simple rating application to create event-based rating list.
 
+__NOTICE:__ simple rating is a single-admin application; so there will be
+ undefined behaviour in case of editing something simultaneously even if in some
+ cases it will work OK.
+
 ## Installation and usage
 
 To launch application you need nodejs, npm, mongodb server and
@@ -15,7 +19,7 @@ Your proxy should support WebSockets.
 Next you should execute in the application directory.
 
 ```bash
-$ npm install
+$ npm install && cd static && bower install && cd ..
 $ node app.js
 ```
 

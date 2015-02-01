@@ -12,6 +12,80 @@ var db = f.database;
 
 f.database.init([{name: 'main', settings: settings.mongodb}]);
 
+function saveParticipant(req) {
+  var participant = req.data;
+  if (undefined === req.data.rating) {
+    req.data.rating = 0;
+  }
+  db.main.collection('participants').save(participant, sendResponse(req, true));
+}
+
+function addEvent(req) {
+  var event = req.data;
+  event.marks = [];
+  db.main.collection('events').insertOne(event,
+      sendResponse(req, true));
+}
+
+function addMark(req) {
+  var data = req.data;
+  for (var i = 0; i < data.participantIds.length; ++i) {
+    data.participantIds[i] = new db.ObjectID(data.participantIds[i]);
+  }
+  async.series([
+    function(callback) {
+      var markObject = {
+        mark: data.mark,
+        participantIds: data.participantIds,
+        comment: data.comment
+      };
+      db.main.collection('events').updateOne(
+          {_id: new db.ObjectID(data.eventId)},
+          {$push: {marks: markObject}}, callback);
+    },
+    function(callback) {
+      db.main.collection('participants').updateMany(
+          {_id: {$in: data.participantIds}},
+          {$inc: {rating: data.mark}}, callback);
+    }
+  ], sendResponse(req));
+}
+
+function removeParticipant(req) {
+  var participantId = new db.ObjectID(req.data._id);
+  async.series([
+    function(cb) {
+      db.main.collection('participants').deleteOne({_id: participantId}, cb);
+    },
+    function(cb) {
+      db.main.collection('events').updateMany(
+          {'marks.participantIds': participantId},
+          {$pull: {'marks.$.participantIds': participantId}},
+          cb
+      );
+    },
+    function(cb) {
+      db.main.collection('events').updateMany(
+          {'marks.participantIds': {$size: 0}},
+          {$pull: {marks: {participantIds: {$size: 0}}}},
+          cb
+      );
+    }
+  ], sendResponse(req));
+}
+
+function removeMark(req) {
+}
+
+function removeEvent(req) {
+}
+
+function renameParticipant(req) {
+}
+
+function updateEvent(req) {
+}
+
 f.loadApp(settings.port, '0.0.0.0', 1, function(err, app) {
   app.io.sockets.route('authorize', function(req) {
     bcrypt.compare(req.data, settings.password,
@@ -23,42 +97,10 @@ f.loadApp(settings.port, '0.0.0.0', 1, function(err, app) {
           if (!ok) {
             return;
           }
-          req.socket.route('add participant', function(req) {
-            var participant = {
-              name: req.data,
-              rating: 0
-            };
-            db.main.collection('participants').insertOne(participant,
-                sendResponse(req, true));
-          });
-          req.socket.route('add event', function(req) {
-            var event = req.data;
-            event.marks = [];
-            db.main.collection('events').insertOne(event,
-                sendResponse(req, true));
-          });
-          req.socket.route('add mark', function(req) {
-            var data = req.data;
-            for (var i = 0; i < data.participantIds.length; ++i) {
-              data.participantIds[i] = new db.ObjectID(data.participantIds[i]);
-            }
-            async.series([
-              function(callback) {
-                db.main.collection('participants').updateOne(
-                    {_id: {$in: data.participantIds}},
-                    {$inc: {rating: data.mark}}, {multi: true}, callback);
-              }, function(callback) {
-                var markObject = {
-                  mark: data.mark,
-                  participantIds: data.participantIds,
-                  comment: data.comment
-                };
-                db.main.collection('events').updateOne(
-                    {_id: new db.ObjectID(data.eventId)},
-                    {$push: {marks: markObject}}, callback);
-              }
-            ], sendResponse(req));
-          });
+          req.socket.route('add participant', saveParticipant);
+          req.socket.route('remove participant', removeParticipant);
+          req.socket.route('add event', addEvent);
+          req.socket.route('add mark', addMark);
           req.respond(ok);
         });
   });
