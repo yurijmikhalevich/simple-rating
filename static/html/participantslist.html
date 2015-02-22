@@ -1,24 +1,36 @@
 <div x-ng-controller="Participants" id="participantsList">
     <div class="list-group">
         <a href="javascript:void(0);" class="list-group-item"
-           x-ng-repeat="participant in participants | orderBy:'rating':true"
+           x-ng-repeat="participant in participants | orderBy:['rating', 'name']:true"
+           x-ng-class="participant.editMode ? 'participant-input' : ''"
            x-ng-mouseenter="participant.showControls = true"
            x-ng-mouseleave="participant.showControls = false"
-           x-ng-click="show(participant._id)">
-            <span class="badge">{{participant.rating}}</span>
-            <span x-ng-if="authorized && participant.showControls" class="controls">
-                <span x-ng-click="edit(participant._id)" x-stop-event="click"
+           x-ng-click="show(participant)">
+            <span x-ng-if="!participant.editMode" class="badge">{{participant.rating}}</span>
+            <span x-ng-if="(!participant.editMode && authorized && participant.showControls)" class="controls">
+                <span x-ng-click="participant.editMode = true; participant.newName = participant.name" x-stop-event="click"
                       class="glyphicon glyphicon-edit" aria-label="edit">
                     <span class="sr-only">edit</span>
                 </span>
-                <span x-ng-click="remove(participant._id)" x-stop-event="click"
+                <span x-ng-click="remove(participant)" x-stop-event="click"
                       class="glyphicon glyphicon-remove" aria-label="remove">
                     <span class="sr-only">remove</span>
                 </span>
             </span>
-            <span class="cropped">{{participant.name}}</span>
+            <span x-ng-if="!participant.editMode" class="cropped">{{participant.name}}</span>
+            <form x-ng-if="participant.editMode" x-ng-submit="edit(participant, true)" x-stop-event="click">
+                <div class="input-group">
+                    <input type="text" class="form-control input-lg" required auto-focus
+                           placeholder="Participant name&hellip;"
+                           x-ng-blur="edit(participant, false)"
+                           x-ng-model="participant.newName"/>
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-default btn-lg input-lg">Submit</button>
+                        </span>
+                </div>
+            </form>
         </a>
-        <div id="participant-input" class="list-group-item" x-ng-if="authorized">
+        <div class="list-group-item participant-input" x-ng-if="authorized">
             <form x-ng-submit="add()">
                 <div class="input-group">
                     <input type="text" class="form-control input-lg" required

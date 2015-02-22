@@ -1,7 +1,7 @@
 <div x-ng-controller="Events">
     <div class="list-group">
         <a href="javascript:void(0);" class="list-group-item"
-            x-ng-repeat="event in events | orderBy:'date':true"
+            x-ng-repeat="event in events | orderBy:['date', 'title']:true"
             x-ng-click="show(event._id)">
             <span class="badge">{{event.date}}</span>
             <span class="cropped">{{event.title}}</span>

@@ -24,18 +24,21 @@ mainApp.controller('Participants', function($rootScope, $scope, $compile) {
           $rootScope.$apply();
         });
   };
-  $scope.edit = function(participantId) {
-    console.log('они мертвы внутри');
+  $scope.edit = function(participant, save) {
+    participant.editMode = false;
+    if (save) {
+      participant.name = participant.newName;
+    }
+    delete participant.newName;
   };
-  $scope.remove = function(participantId) {
-    var participant = $rootScope.findParticipant(participantId);
+  $scope.remove = function(participant) {
     bootbox.confirm({
       title: 'Are you sure?',
       message: 'Are you sure you want to completely remove participant "' +
           participant.name + '"?',
       callback: function(confirmed) {
         if (confirmed) {
-          socket.emit('remove participant', {_id: participantId}, function() {
+          socket.emit('remove participant', {_id: participant._id}, function() {
             $rootScope.participants.splice(
                 $rootScope.participants.indexOf(participant), 1);
             $rootScope.$apply();
@@ -44,9 +47,8 @@ mainApp.controller('Participants', function($rootScope, $scope, $compile) {
       }
     });
   };
-  $scope.show = function(participantId) {
+  $scope.show = function(participant) {
     $.get('/static/html/participantmodal.html', function(template) {
-      var participant = $rootScope.findParticipant(participantId);
       var myScope = $rootScope.$new();
       myScope.participantId = participant._id;
       myScope.name = participant.name;
